@@ -1,6 +1,6 @@
 <form action="{% url 'polls:vote' question.id %}" method="post"> <!--Para enviar elementos del formulario por seguridad se usa post-->
 {% csrf_token %} <!--Con esta etiqueta evitamos ataques al formulario-->
-<fieldset> <!--Es un conjunto de campos del formulario-->
+<fieldset> <!--Es un conjunto de campos del formulario--> 
     <legend><h1>{{ question.question_text }}</h1></legend><!--Legend es un titulo-->
     {% if error_message %}
         <p><strong>{{ error_message }}</strong></p>
@@ -26,4 +26,4 @@
     {% for choice in question.choice_set.all %}
         <li>{{ choice.choice_text }}</li>
     {% endfor %}
-</ul> {% endcomment %}
+</ul> {% endcomment %} 
