@@ -1,31 +1,51 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+from django.views import generic
 
 from .models import Question, Choice
 
 
-def index(request):
-    latest_question_list = Question.objects.all()
-    return render(request, "polls/index.html", {
-        "latest_question_list": latest_question_list
-    }) # render lleva 3 parametros: el 1 la respuesta, el 2 la ubicacion del template, el 3 un objeto con las variables usadas por el template.
+# def index(request):
+#     latest_question_list = Question.objects.all()
+#     return render(request, "polls/index.html", {
+#         "latest_question_list": latest_question_list
+#     }) # render lleva 3 parametros: el 1 la respuesta, el 2 la ubicacion del template, el 3 un objeto con las variables usadas por el template.
 
 
-def detail(request, question_id):
-    question = get_object_or_404(Question, pk=question_id) 
-    return render(request, "polls/detail.html", {
-        "question": question
-    }) # El error 404 lleva 2 parametros: EL 1 el modelo y el 2 el valor a ejecutar internamente en la funcion get.
+# def detail(request, question_id):
+#     question = get_object_or_404(Question, pk=question_id) 
+#     return render(request, "polls/detail.html", {
+#         "question": question
+#     }) # El error 404 lleva 2 parametros: EL 1 el modelo y el 2 el valor a ejecutar internamente en la funcion get.
 
 
-def results(request, question_id):
-    question = get_object_or_404(Question, pk=question_id)
-    return render(request, "polls/results.html", {
-        "question": question
-    })
+# def results(request, question_id):
+#     question = get_object_or_404(Question, pk=question_id)
+#     return render(request, "polls/results.html", {
+#         "question": question
+#     })
 
 
+# Es una generic view
+class IndexView(generic.ListView):
+    template_name = "polls/index.html"
+    context_object_name = "latest_question_list"
+
+    def get_queryset(self):
+        """Return the last five published questions """ # El "[:5]" nos dice que solo traera los primeros 5 elementos del arreglo.
+        return Question.objects.order_by("-pub_date")[:5] # El "-" significa que traera los datos de los mas recientes a las mas antiguas.
+
+class DetailView(generic.DetailView):
+    model = Question
+    template_name = "polls/detail.html"
+
+class ResultView(generic.DetailView):
+    model = Question
+    template_name = "polls/results.html"
+
+
+# Es una function based views
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     try:
