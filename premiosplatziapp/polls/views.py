@@ -37,9 +37,15 @@ class IndexView(generic.ListView):
         """Return the last five published questions """ # El "[:5]" nos dice que solo traera los primeros 5 elementos del arreglo.
         return Question.objects.filter(pub_date__lte=timezone.now()).order_by("-pub_date")[:5] # El "-" significa que traera los datos de los mas recientes a las mas antiguas.
 
-class DetailView(generic.DetailView):   # El __lte nos indica que es menor o igual.
+class DetailView(generic.DetailView):   
     model = Question
     template_name = "polls/detail.html"
+
+    def queryset(self):
+        """
+        Excludes any questions that aren't published yet.
+        """
+        return Question.objects.filter(pub_date__lte=timezone.now())   # El __lte nos indica que es menor o igual.
 
 class ResultView(generic.DetailView):
     model = Question
