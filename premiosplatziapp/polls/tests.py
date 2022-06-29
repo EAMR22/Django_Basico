@@ -76,17 +76,17 @@ class QuestionIndexViewTests(TestCase):
 
 
 class QuestionDetailViewTests(TestCase):
-    def text_future_question(self):
+    def test_future_question(self):
         """
         The detail view for a question with a pub_date in the future
         returns a 404 error not found.
         """
-        future_question = create_question(question_text="Future question", days=30)   # Con (future_question.id,) lo que hace es que toma una tupla de u elemento.
+        future_question = create_question(question_text="Future question", days=30)   # Con (future_question.id,) lo que hace es que toma una tupla de un elemento.
         url = reverse("polls:detail", args=(future_question.id,))    # Con el .id accedemos a la llave primaria pk. 
         response = self.client.get(url)
         self.assertEqual(response.status_code, 404)
 
-    def text_past_question(self):
+    def test_past_question(self):
         """
         The detail view of a question with a pub_date in the past
         displays the questions test.
